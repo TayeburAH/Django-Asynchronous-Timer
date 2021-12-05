@@ -35,7 +35,7 @@
 		<div class="d-flex justify-content-center">
 			<input class="number d-block" name="number" type="number" min="1"><button class="button btn btn-primary">Start</button>
 		</div>
-	<div>
+	</div>
 	<p id="timer" class="text-center mt-3" style="font-size:40px"></p>
 
 <script>
@@ -48,7 +48,7 @@ let updateSocket;
 	}
     // switch to wss
     if (window.location.protocol == "https:"){
-    updateSocket = new WebSocket('wss://' + window.location.host + window.location.pathname + QUESTION_ID);
+    updateSocket = new WebSocket('wss://' + window.location.host + '/counter/');
     }
 
     // Get called when received message from backend
