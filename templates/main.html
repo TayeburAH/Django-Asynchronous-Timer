@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS Must be first -->
+	<!-- Bootstrap 4.6 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+
+	<!-- Font Awesome -->
+    <!-- cdn link to paste in your <head> -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
+
+	<!-- Google fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+	<!-- local CSS -->
+
+
+<!------------------------------------------------Scripts --------------------------------------------------------->
+	<!--  Bootstrap, Popper, ajax -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+	<!-- Moment.js -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.1/moment.min.js"></script>
+<body>
+
+	<div class="d-flex flex-column" style="position:relative; top:10rem">
+		<h2 id="countdown" class="text-center">Stop Watch</h2>
+		<div class="d-flex justify-content-center">
+			<input class="number d-block" name="number" type="number" min="1"><button class="button btn btn-primary">Start</button>
+		</div>
+	<div>
+	<p id="timer" class="text-center mt-3" style="font-size:40px"></p>
+
+<script>
+let updateSocket;
+
+    // a request with this url is sent when this pages is loaded using ws:// or wss://
+
+    if (window.location.protocol == "http:"){
+    updateSocket = new WebSocket('ws://' + window.location.host + '/counter/');
+	}
+    // switch to wss
+    if (window.location.protocol == "https:"){
+    updateSocket = new WebSocket('wss://' + window.location.host + window.location.pathname + QUESTION_ID);
+    }
+
+    // Get called when received message from backend
+    updateSocket.onmessage = function(e) {
+        console.log("Received a message from the socket:", e.data); // e.data gives the access
+		if(e.data){
+			if(e.data == $('.number').val()){
+				console.log('Disappear');
+				$('#timer').html('Times Up').css({
+				'font-size':'20px'
+				});
+				$('.button').css("pointer-events","auto");
+				$('input').attr('disabled',false )
+			}else{
+				console.log('Time: '+ e.data);
+				$('#timer').html(e.data+ " s");
+
+			}
+		}
+    };
+
+   // Get called when you connected successfully
+   // This is where you send messages to the backend using send()
+
+   // Get called when you connected successfully
+   // This is where you send messages to the backend using send()
+    updateSocket.onopen = function(e) {
+        console.log("Socket connected; sending a ping");
+		$('.button').click(function(){
+        	  	if($('.number').val()){
+        	  		$('input').attr('disabled', true)
+        	  	   $('.button').css(
+        	  	   {
+        	  	   "pointer-events":"none",
+        	  	   });
+        	       message={
+        	    	"message":"Start",
+        			  "value": $('.number').val(),
+        		    }
+			  	       updateSocket.send(JSON.stringify(message))
+        	      }
+		});
+}
+
+        /*
+        $('.button').click(function(){
+        	if($('.button').html()=="Start"){
+        	  	if($('.number').val()){
+        	  	   $('.button').html('Stop')
+        	       message={
+        	    	"message":"Start",
+        			  "value": $('.number').val(),
+        		    }
+			  	       updateSocket.send(JSON.stringify(message))
+        	      }
+
+          }else{
+        		$('.button').html('Start')
+        	    message={
+          		"message":"Stop",
+          		"value": $('.number').val(),
+          		}
+  				    updateSocket.send(JSON.stringify(message))
+  				}
+
+        });
+}
+*/
+
+   // get called when you get disconnected. What to do if you do get disconnected
+    updateSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly; reconnecting');
+        // setTimeout(connectSocket, 1000);
+    };
+
+   // gets called when an error occurred
+    updateSocket.onerror = function(e) {
+        console.log("There was en error in WebSocket");
+    }
+
+</script>
+</body>
+</html>
