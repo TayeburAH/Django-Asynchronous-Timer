@@ -3,12 +3,12 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 from channels.db import database_sync_to_async
 import json
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
 import time
 from django.utils import timezone
 from datetime import datetime
 
-User = get_user_model()
+# User = get_user_model()
 
 MSG_TYPE_MESSAGE = 0  # For standard messages
 
