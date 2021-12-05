@@ -36,7 +36,7 @@
 			<input class="number d-block" name="number" type="number" min="1"><button class="button btn btn-primary">Start</button>
 		</div>
 	</div>
-	<p id="timer" class="text-center mt-3" style="font-size:40px"></p>
+	<p id="timer" class="text-center mt-3" ></p>
 
 <script>
 let updateSocket;
@@ -63,6 +63,9 @@ let updateSocket;
 				$('.button').css("pointer-events","auto");
 				$('input').attr('disabled',false )
 			}else{
+				$('#timer').html('Times Up').css({
+				'font-size':'40px'
+				});
 				console.log('Time: '+ e.data);
 				$('#timer').html(e.data+ " s");
 
